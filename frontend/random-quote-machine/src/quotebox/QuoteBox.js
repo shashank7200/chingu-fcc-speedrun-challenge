@@ -19,7 +19,7 @@ class QuoteBox extends Component{
 changeQuote(){
     let colorsIndex = Math.floor( Math.random () * (113 - 1 + 1)) + 1;
     let quotesIndex = Math.floor( Math.random () * (100 - 1 + 1)) + 1;
-    $('.QuoteBox').css("background-color",colors[colorsIndex]);
+    $('.App').css("background-color",colors[colorsIndex]);
     $('.quote').html(quotes[quotesIndex][0]);
     $('.author').html(quotes[quotesIndex][1]);
 }
@@ -31,10 +31,11 @@ render(){
            <div className="QuoteBox">
               <blockquote className="quote">Contains Quote</blockquote>
               <p className="author">Prints Author name</p>
-              <a href="#" className="tweet">
+              <div className="footer"><a href="#" className="tweet">
                 <i className="fa fa-twitter" aria-hidden="true"></i>
               </a>
               <button className="nextButton" onClick={this.changeQuote}>{submit}</button>
+              </div>
            </div>
         </div>
     );
