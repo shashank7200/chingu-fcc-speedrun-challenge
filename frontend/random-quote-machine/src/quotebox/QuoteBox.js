@@ -20,7 +20,7 @@ class QuoteBox extends Component{
 changeQuote(){
     let colorsIndex = Math.floor( Math.random () * (92 - 1 + 1)) + 1;
     let quotesIndex = Math.floor( Math.random () * (85 - 1 + 1)) + 1;
-    this.setState({ quote : quotes[quotesIndex][0], author : quotes[quotesIndex][1] });
+    console.log(`Updating from changeQuote quote : ${this.state.quote} and author: ${this.state.author}`);
     $('.App').css("background-color",colors[colorsIndex]);
     $('.quote').css("color",colors[colorsIndex]);
     // $('.quote').html('<i class="fa fa-quote-left" aria-hidden="true"></i>'+quotes[quotesIndex][0]);
@@ -32,7 +32,11 @@ changeQuote(){
     $('.quote').html('<i class="fa fa-quote-left" aria-hidden="true"></i>'+quotes[quotesIndex][0]); });
     $(".author").animate({ opacity: 0 }, 500,function() { $(this).animate({ opacity: 1 }, 500);
     $('.author').html('<i class="fa fa-hashtag" aria-hidden="true"></i>'+quotes[quotesIndex][1]); });
+    $('.tweet').attr({
+      href: 'https://twitter.com/intent/tweet?hashtags=quotes&text="' + quotes[quotesIndex][0] + '" ' + quotes[quotesIndex][1]
+    });
 }
+
 
 render(){
     const submit = "New Quote";
@@ -41,10 +45,9 @@ render(){
       color: "#fff",
       cursor: "pointer"
     };
-    let currentQuote=this.state.quote ;
-    let currentAuthor=this.state.author;
-    let tweetLink = 'https://twitter.com/intent/tweet?hashtags=quotes&text="' + currentQuote + '" ' + currentAuthor;
-    console.log(tweetLink);
+
+    let tweetLink = 'https://twitter.com/intent/tweet?hashtags=quotes&text="The world is the great gymnasium where we come to make ourselves strong." Swami Vivekananda' ;
+    console.log(`Updating from changeQuote quote : ${this.state.quote} and author: ${this.state.author}`);
     return(
         <div className="QuoteContainer">
            <div className="QuoteBox">
@@ -54,10 +57,10 @@ render(){
                 <i className="fa fa-twitter color-transition" aria-hidden="true"></i>
               </a>
               <button className="nextButton color-transition" onClick={this.changeQuote}>{submit}</button>
-                <div className="copy">
-     				   	   <i className="fa fa-code"></i>&nbsp; with &nbsp;<i className="fa fa-heart"></i>&nbsp; &amp; &nbsp;<i className="devicon-react-original colored"></i> by &nbsp;
-                     <a href="https://shashank7200.github.io" target="_blank" style={linkStyle}>Shashank Shekhar</a>
-     				   </div>
+            <div className="copy">
+ 				   	   <i className="fa fa-code"></i>&nbsp; with &nbsp;<i className="fa fa-heart"></i>&nbsp; &amp; &nbsp;<i className="devicon-react-original colored"></i> by &nbsp;
+                 <a href="https://shashank7200.github.io" target="_blank" style={linkStyle}>Shashank Shekhar</a>
+ 				   </div>
               </div>
 
            </div>
