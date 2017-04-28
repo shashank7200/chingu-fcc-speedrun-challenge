@@ -10,12 +10,20 @@ import { get } from 'axios'
             resolve({ lat: location.coords.latitude, lon: location.coords.longitude})
             },
             (error) => {
-            reject(error)
+                if (error.code === error.PERMISSION_DENIED){
+                      get('https://ipapi.co/json/')
+                        .then(({ data: ipData }) => {
+                            resolve({ lat : ipData.latitude , lon: ipData.longitude })
+                        }).catch((error)=> reject(error))
+                }else{
+                    reject(error)
+                }
+
             }
         )
         } else {
             //Fallback to IP
-            get('https://freegeoip.net/json/')
+            get('https://ipapi.co/json/')
             .then(({ data: ipData }) => {
                 resolve({ lat : ipData.latitude , lon: ipData.longitude })
             }).catch((error)=> reject(error))
@@ -25,7 +33,7 @@ import { get } from 'axios'
 
     export function fetchWeather(long, lat){
         const appid = '722ac3c3b3097d61c9fc3a387dec9db1'
-        let url = 'http://api.openweathermap.org/data/2.5/weather?lat='+lat+'&lon='+long+'&appid='+appid
+        let url = 'https://weather.millergeek.xyz/data/2.5/weather?lat='+lat+'&lon='+long+'&appid='+appid
         return new Promise((resolve , reject)=>{
             get(url).then(({data: weatherData}) => {
                 resolve(weatherData)
