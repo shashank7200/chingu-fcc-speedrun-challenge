@@ -42,7 +42,7 @@ class WeatherDisplay extends Component{
         return(
             <div className="weather-box">
               <div className="user-location">
-                 <h2 className="place">{city},<br/>{country_name || country}</h2>
+                 <h2 className="place">{city},<br/>{ country_name.length<=16?country_name:country }</h2>
                  <h3 className="date"><span>{new Date().getDate()}</span> <span>{months[new Date().getMonth()]}</span><br/><span>{days[new Date().getDay()]}</span></h3>
               </div>
               <hr/>
