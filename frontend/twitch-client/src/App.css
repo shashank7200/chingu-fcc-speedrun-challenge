@@ -20,10 +20,19 @@ body{
   margin: 0;
   padding: 0;
 }
+.show{
+  display: block;
+  transition: all 0.5s ease-in-out;
+}
+.hide{
+  transition: all 0.5s ease-in-out;
+  display: none;
+}
 
 .container {
   width: 1140px;
   margin: 0 auto;
+  margin-bottom: 70px;
 }
 
   /*Twitch logo at top*/
