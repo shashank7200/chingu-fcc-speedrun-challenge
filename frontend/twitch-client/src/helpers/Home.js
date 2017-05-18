@@ -1,21 +1,51 @@
 import React,{ Component } from 'react'
 import Channels from './Channels'
-import { get } from 'axios'
+import { getUserInformation, getStreamInformation } from './Api'
+
 
 class Home extends Component{
 
     constructor(props){
         super(props)
 
-
+        this.state ={
+            users: ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "habathcx", "RobotCaleb", "noobs2ninjas", "storbeck","brunofin", "comster404"],
+            displayNames: [],
+            logos : [],
+        }
     }
-    
-    getChannels(status="all"){
+
+    componentDidMount(){
+        const { users } = this.state; let nameString = ""; let logoString = "";
+        
+        for ( let i =0;i<users.length;i++){
+            // Gets user Informations
+            getUserInformation(users[i])
+            .then((user) => {
+
+                if(user.name === undefined){ user.name = users[i]; user.logo = 'img/closed.png'}
+                if(user.logo === null){ user.logo = 'img/null.png'}                
+                nameString += user.name+" ";  logoString += user.logo+" "
+                let nameArr = nameString.split(' '); let logoArr = logoString.split(' ')
+                if(nameArr.length===11){ nameArr.pop(); logoArr.pop()}
+
+                this.setState({ displayNames: nameArr})
+                this.setState({ logos: logoArr})
+            }).catch((error) => console.error(error))
+
+            // Gets user Stream informations
+            getStreamInformation(users[i])
+            .then((stream) => {
+                
+            })
+        }
         
     }
 
 
     render(){
+        const { displayNames, logos } = this.state
+
         return(
             <div className="container">
                 <div className="logo">
@@ -30,8 +60,9 @@ class Home extends Component{
                             <li>Offline</li>
                         </ul>
                     </div>
-                    <hr/>                
-                <Channels />
+                    <hr/>
+                    { displayNames.map((data, index) => 
+                        <Channels name={ data } logoUrl={ logos[index] } key={ index }/> )}
                 </div>
             </div>
         )
