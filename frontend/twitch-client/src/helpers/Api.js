@@ -25,8 +25,19 @@ module.exports.getStreamInformation  = (username) => {
                  .then(({
                      data: streamInfo
                  }) => {
+                     let userStream = {}
 
-                     resolve(streamInfo)
+                     if( streamInfo.stream === null){
+                         userStream.currentStream = 'Stream Closed'
+                         userStream.status = "offline"
+                         userStream.preview = 'img/offline.gif'
+                     }else{
+                        userStream.status = streamInfo.stream.stream_type
+                        userStream.currentStream = streamInfo.stream.game
+                        userStream.preview = streamInfo.stream.preview.medium
+                     }
+
+                     resolve(userStream)
                  })
                  .catch((error) => reject(error))
 
