@@ -1,6 +1,6 @@
 import React,{ Component } from 'react'
 import Channels from './Channels'
-import { getUserInformation, getStreamInformation } from './Api'
+import { getChannelInformation } from './Api'
 
 
 class Home extends Component{
@@ -18,7 +18,8 @@ class Home extends Component{
             currentStream: [],
             allClass:"active",
             onlineClass:"",
-            offlineClass:""
+            offlineClass:"",
+            streamUrl:[]
         }
         this.sortAllStatus = this.sortAllStatus.bind(this)
         this.sortOnlineStatus = this.sortOnlineStatus.bind(this)
@@ -27,29 +28,26 @@ class Home extends Component{
 
     componentDidMount(){
         //  User Information
-        const { users } = this.state; let nameString = ""; let logoString = ""; 
+        const { users } = this.state; let nameString = "", logoString = "", streamUrl = "";
         // Stream Information
         let statuses = "", previewUrl="",streamDesc=""
 
         for ( let i =0;i<users.length;i++){
-            // Gets user Informations
-            getUserInformation(users[i])
-            .then((user) => {
 
-                if(user.name === undefined){ user.name = users[i]; user.logo = 'img/closed.png'}
-                if(user.logo === null){ user.logo = 'img/null.png'}                
-                nameString += user.name+" ";  logoString += user.logo+" "
-                let nameArr = nameString.split(' '); let logoArr = logoString.split(' ')
-                if(nameArr.length===11){ nameArr.pop(); logoArr.pop()}
+            // Gets Channel Information
+            getChannelInformation(users[i])
+            .then(({userInfo: user, streamInfo: stream}) => {
+
+                if (user.name === undefined) { user.name = users[i]; user.logo = 'img/closed.png';}
+                if (user.logo === null) { user.logo = 'img/null.png';}
+                streamUrl += user.name === undefined?'# ':`${user.name} ` 
+                nameString += user.name + " "; logoString += user.logo + " "
+                let nameArr = nameString.split(' '), logoArr = logoString.split(' '), streamUrlArr = streamUrl.split(' ')
+                if (nameArr.length === 11) { nameArr.pop(); logoArr.pop(); streamUrlArr.pop() }
 
                 this.setState({ displayNames: nameArr})
-                this.setState({ logos: logoArr})
-            }).catch((error) => console.error(error))
-
-            // Gets user Stream informations
-            getStreamInformation(users[i])
-            .then((stream) => {
-                // status, currentStream, preview
+                this.setState({ logos: logoArr, streamUrl: streamUrlArr})
+                console.log(streamUrlArr)
 
                 statuses += stream.status+" "
                 let statusArr = statuses.split(" ")
@@ -106,7 +104,7 @@ class Home extends Component{
 
 
     render(){
-        const { displayNames, logos, previewLogo,status, currentStream } = this.state
+        const { displayNames, logos, previewLogo,status, currentStream, streamUrl } = this.state
 
         return(
             <div className="container">
@@ -130,6 +128,7 @@ class Home extends Component{
                         logoUrl={ logos[index] } 
                         status={ status[index] }
                         description={ currentStream[index] }
+                        streamUrl={ `https://www.twitch.tv/${streamUrl[index]}`}
                         key={ index }/> 
                     )}
                 </div>
