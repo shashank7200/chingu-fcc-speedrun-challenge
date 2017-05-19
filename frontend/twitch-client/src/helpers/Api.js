@@ -1,45 +1,33 @@
-import { get } from 'axios'
+import { get, all, spread } from 'axios'
 
-module.exports.getUserInformation = (username) => {
+module.exports.getChannelInformation = (username) => {
+    return new Promise((resolve, reject) => {
 
-     return new Promise((resolve, reject) => {
+            all([
+                get(`https://wind-bow.glitch.me/twitch-api/users/${username}`),
+                get(`https://wind-bow.glitch.me/twitch-api/streams/${username}`)
+                ])
+                .then(spread(function (userInfo, streamInfo) {
 
-             get(`https://wind-bow.glitch.me/twitch-api/users/${username}`)
-                 .then(({
-                     data: userInfo
-                 }) => {
                      let usernames={}
-                     usernames.name = userInfo.display_name
-                     usernames.logo = userInfo.logo
-                     resolve(usernames)
-                 })
-                 .catch((error) => reject(error))
-     })
-    }
+                     usernames.name = userInfo.data.display_name
+                     usernames.logo = userInfo.data.logo
 
-module.exports.getStreamInformation  = (username) => {
-
-    return new Promise(( resolve, reject) => {
-        
-        get(`https://wind-bow.glitch.me/twitch-api/streams/${username}`)
-                 .then(({
-                     data: streamInfo
-                 }) => {
                      let userStream = {}
-
-                     if( streamInfo.stream === null){
+                     if( streamInfo.data.stream === null){
                          userStream.currentStream = 'Stream Closed'
                          userStream.status = "offline"
                          userStream.preview = 'img/offline.gif'
                      }else{
-                        userStream.status = streamInfo.stream.stream_type
-                        userStream.currentStream = streamInfo.stream.game
-                        userStream.preview = streamInfo.stream.preview.medium
+                        userStream.status = streamInfo.data.stream.stream_type
+                        userStream.currentStream = streamInfo.data.stream.game
+                        userStream.preview = streamInfo.data.stream.preview.medium
                      }
+                     resolve({ userInfo: usernames, streamInfo: userStream })
 
-                     resolve(userStream)
-                 })
-                 .catch((error) => reject(error))
-
+                }))
+                //.then(response => this.setState({ vehicles: response.data }))
+                .catch(error => console.log(error));
+            
     })
 }
