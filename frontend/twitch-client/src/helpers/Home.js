@@ -47,8 +47,7 @@ class Home extends Component{
 
                 this.setState({ displayNames: nameArr})
                 this.setState({ logos: logoArr, streamUrl: streamUrlArr})
-                console.log(streamUrlArr)
-
+                
                 statuses += stream.status+" "
                 let statusArr = statuses.split(" ")
 
